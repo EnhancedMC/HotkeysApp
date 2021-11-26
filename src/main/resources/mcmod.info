@@ -1,0 +1,17 @@
+[
+  {
+    "modid": "${id}",
+    "name": "${name}",
+    "description": "Hotkey manager for EMC",
+    "version": "${version}",
+    "mcversion": "[1.8,1.8.9]",
+    "url": "https://github.com/EnhancedMC/HotkeyApp",
+    "updateUrl": "",
+    "authorList": ["Whodundid", "SLLCoding"],
+    "credits": "",
+    "logoFile": "assets/hotkeys/logo.png",
+    "screenshots": [],
+    "dependencies": [],
+    "parent": ""
+  }
+]

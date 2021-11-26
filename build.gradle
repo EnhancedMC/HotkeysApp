@@ -1,0 +1,89 @@
+buildscript {
+    repositories {
+        maven {
+            name = "forge"
+            url = "https://maven.minecraftforge.net"
+        }
+        maven {
+            name = "jitpack"
+            url = "https://jitpack.io"
+        }
+        maven {
+            name = "gradle"
+            url = "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.github.asbyth:ForgeGradle:6f53277'
+        classpath "org.hibernate.build:gradle-maven-publish-auth:3.0.4"
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
+apply plugin: "org.hibernate.build.maven-repo-auth"
+
+version = properties.version
+group = groupId
+archivesBaseName = artifactId
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+
+    mappings = "stable_20"
+}
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url "https://maven.pkg.github.com/EnhancedMC/EnhancedMC"
+    }
+}
+
+dependencies {
+    compileOnly "com.whodundid:enhancedmc:0.1.0-SNAPSHOT"
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    inputs.property "id", project.archivesBaseName
+    inputs.property "name", project.name
+    inputs.property "url", url
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand 'version':project.version,
+                'mcversion':project.minecraft.version,
+                'id':project.archivesBaseName,
+                'name':project.name,
+                'url':url
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/EnhancedMC/HotkeysApp"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+
+            from(components.java)
+        }
+    }
+}
